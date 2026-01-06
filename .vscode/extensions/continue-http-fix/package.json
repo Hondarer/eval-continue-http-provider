@@ -1,0 +1,12 @@
+{
+  "name": "continue-http-fix",
+  "displayName": "Continue HTTP Providers Fix",
+  "version": "1.0.0",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": ["Other"],
+  "extensionDependencies": ["continue.continue"],
+  "activationEvents": ["onStartupFinished"],
+  "main": "./extension.js"
+}

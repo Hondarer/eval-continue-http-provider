@@ -25,28 +25,12 @@ app.MapPost("/context", async (HttpContext context) =>
         requestBody = await reader.ReadToEndAsync();
     }
 
-    // 1. 要求データをトレース出力
+    // 要求データをトレース出力
     var jsonOptions = new JsonSerializerOptions { WriteIndented = true, Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping };
     Console.WriteLine($"[Port {localPort}] 要求データ:");
     Console.WriteLine(requestBody);
 
-    // リクエストをパースして詳細を表示
-    try
-    {
-        var requestData = JsonSerializer.Deserialize<RequestData>(requestBody);
-        if (requestData != null)
-        {
-            Console.WriteLine($"  - query: {requestData.query}");
-            Console.WriteLine($"  - fullInput: {requestData.fullInput}");
-            Console.WriteLine($"  - workspacePath: {requestData.workspacePath}");
-        }
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"  [警告] リクエストのパースに失敗: {ex.Message}");
-    }
-
-    // 2. 応答データは2つのコンテキストアイテムをMarkdown形式で返す
+    // 応答データは2つのコンテキストアイテムを Markdown 形式で返す
     var contextItems = new List<ContextItem>
     {
         new ContextItem
@@ -57,10 +41,12 @@ app.MapPost("/context", async (HttpContext context) =>
                 # リクエスト情報
 
                 ## 接続情報
+
                 - **ポート番号**: {localPort}
                 - **リモートアドレス**: {context.Connection.RemoteIpAddress}
 
                 ## リクエストボディ
+
                 ```json
                 {requestBody}
                 ```
@@ -74,15 +60,14 @@ app.MapPost("/context", async (HttpContext context) =>
                 # サーバー情報
 
                 ## 環境
+
                 - **ホスト名**: {System.Environment.MachineName}
                 - **OS**: {System.Environment.OSVersion}
                 - **プロセスID**: {System.Environment.ProcessId}
 
                 ## タイムスタンプ
-                - **受信時刻**: {DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}
 
-                ## ステータス
-                ✅ HTTP Context Provider は正常に動作しています
+                - **受信時刻**: {DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}
                 """
         }
     };
